@@ -18,36 +18,44 @@
 "*"   |
 "-"   |
 "="   |
+"|"   |
 "/"   |
-"<"   |
-">"   |
 ":"   |
 ";"   |
-"+"   { printf("%c\n", yytext[0]); return yytext[0]; /* what you have read, return it */ }
+"+"   { return yytext[0]; }
+
+">"   { yylval.fn = 1; return CMP; }
+"<"   { yylval.fn = 2; return CMP; }
+"<>"  { yylval.fn = 3; return CMP; }
+"=="  { yylval.fn = 4; return CMP; }
+">="  { yylval.fn = 5; return CMP; }
+"<="  { yylval.fn = 6; return CMP; }
 
 
-"program" { printf("program\n"); return PROGRAM; }
-"var" { printf("var\n"); return VAR; }
-"array" { printf("array\n"); return ARRAY; }
-"of" { printf("of\n"); return OF; }
-"integer" { printf("integer\n"); return INTEGER; }
-"real" { printf("real\n"); return REAL; }
-"begin" { printf("begin\n"); return BGN; }
-"end" { printf("end\n"); return END; }
-"if" { printf("if\n"); return IF; }
-"then" { printf("then\n"); return THEN; }
-"else" { printf("else\n"); return ELSE; }
-"while" { printf("while\n"); return WHILE; }
-"do" { printf("do\n"); return DO; }
-".." { printf("..\n"); return DOTS; }
-"print" { printf("print\n"); return PRINT; }
+"integer" { yylval.type_c = 'a'; return STD_TYPE; }
+"real" { yylval.type_c = 'b'; return STD_TYPE; }
+
+
+"program" { return PROGRAM; }
+"var" { return VAR; }
+"array" { return ARRAY; }
+"of" { return OF; }
+"begin" { return BGN; }
+"end" { return END; }
+"if" { return IF; }
+"then" { return THEN; }
+"else" { return ELSE; }
+"while" { return WHILE; }
+"do" { return DO; }
+".." { return DOTS; }
+"print" { return PRINT; }
 
 
 
 [a-zA-Z][a-zA-Z0-9]*  { printf("%s\n", yytext); return ID; }
 
 [0-9]+"."[0-9]+ |
-[0-9]+  { printf("%s\n", yytext); return NUMBER; }
+[0-9]+  { yylval.d = atof(yytext); return NUMBER; }
 
 "//".*
 [ \t\n]
